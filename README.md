@@ -1,1 +1,3 @@
 # RedSocial
+
+Documentación de Instalación
