@@ -33,6 +33,3 @@ VALUES
         1653926628,
         'Fusce fermentum porta ex nec euismod. Integer justo enim, tempor in augue eu, ornare fringilla magna. Aliquam mollis felis purus, nec euismod nibh volutpat eu.'
     );
-
-ALTER USER 'admin' IDENTIFIED WITH mysql_native_password BY 'Welcome1'; 
-flush privileges;
