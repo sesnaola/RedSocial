@@ -11,7 +11,7 @@ const connection = mysql.createPool({
 });
 
 app.get("/", (req, res) => {
-  connection.query("SELECT * FROM Student", (err, rows) => {
+  connection.query("SELECT * FROM Users", (err, rows) => {
     if (err) {
       res.json({
         success: false,
@@ -26,4 +26,4 @@ app.get("/", (req, res) => {
   });
 });
 
-app.listen(3080, () => console.log("listining on port 3080"));
+app.listen(3080, () => console.log("listening on port 3080"));
