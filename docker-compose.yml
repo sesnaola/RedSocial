@@ -1,48 +1,24 @@
-version: "3.2"
+version: "3.8"
 services:
-  nodejs:
-    build:
-      context: .
-    image: rsocial/nodejs-mysql-app
-    depends_on:
-      - mysql
-    networks:
-      - frontend
-      - backend
+  db:
+    container_name: db
+    build: ./app/db
     environment:
-      - MYSQL_HOST=localhost
-      - MYSOL_USER-admin
-      - MYSQL_PASS=Welcome1
-      - MYSQL_DB=rsocial
-    volumes:
-      - ./www/:/var/www/html/
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: Welcome1
+      MYSQL_ROOT_PASSWORD: Welcome1
+      MYSQL_DATABASE: rsocial
+    restart: always
+  web-front:
+    container_name: web-front
+    build: ./app
+    environment:
+      MYSQL_DATABASE: rsocial
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: Welcome1
+      MYSQL_HOST: db
     ports:
-      - "30001:8005"
-    container_name: rsocial-node-app
-  mysql:
-    image: mysql:5.7
-    networks:
-      - backend
-    environment:
-      - MYSQL_ROOT_PASSWORD=Welcome1
-      - MYSQL_USER=admin
-      - MYSQL_PASSWORD=Welcome1
-      - MYSQL_DATABASE=rsocial
-    container_name: rsocial-mysql-app
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:4.7
+      - "3080:3080"
     depends_on:
-      - mysql
-    networks:
-      - backend
-    ports:
-      - "30002:80"
-    environment:
-      - PMA_HOST=localhost
-      - PMA_PORT= 3306
-    volumes:
-      - /sessions
-    container_name: rsocial-phpmyadmin-app
-networks:
-  frontend:
-  backend:
+      - db
+    restart: on-failure
