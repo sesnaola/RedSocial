@@ -36,11 +36,11 @@ jspm_packages/
 *.tgz
 
 # dotenv environment variable files
-.env
-.env.development.local 
-.env.test.local
-.env.production.local
-.env.local
+# .env
+# .env.development.local 
+# .env.test.local
+# .env.production.local
+# .env.local
 
 # vuepress build output
 .vuepress/dist
@@ -51,3 +51,6 @@ jspm_packages/
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
+
+# mac
+.DS_Store
