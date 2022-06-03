@@ -1,5 +1,5 @@
 const Posts = (post) => {
-    post.id = String;
+    post.id = Number;
     post.userId = String;
     post.postType = String;
     post.path = String;

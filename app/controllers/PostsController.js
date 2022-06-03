@@ -4,9 +4,10 @@ let posts = require('./../models/PostsModel');
 
 
 const getPosts = (request, response, next) => {
-    let postType = request.params.postType;
-    let userId = request.params.userId;
-    let amount = request.params.amount;
+    console.log(request.query);
+    let postType = request.query.postType;
+    let userId = request.query.userId;
+    let amount = request.query.amount;
 
     let query = generateQuery(postType, userId, amount);
 

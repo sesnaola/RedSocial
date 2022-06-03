@@ -5,6 +5,6 @@ const postsController = require('./../controllers/PostsController');
 
 router.get('/users', usersController.getAllUsers);
 router.get('/users/:id', usersController.getUser);
-router.get('/posts/postType/:postType?/userId/:userId?/amount/:amount?', postsController.getPosts);
+router.get('/posts', postsController.getPosts);
 
 module.exports = router;
