@@ -34,8 +34,8 @@ function arrangeQuery(queryPostType, queryUserId, queryAmount, postType, userId,
     let query = 'SELECT * FROM Posts WHERE ' + queryPostType + ' AND ' + queryUserId + queryAmount;
 
     if (postType == undefined && userId == undefined && amount == undefined) { query = 'SELECT * FROM Posts'; }
-    if (postType == undefined && userId == undefined) { console.log("Quitar WHERE"); query = query.replace('WHERE', ''); }
-    if (postType == undefined || userId == undefined) { console.log("Quitar AND"); query = query.replace('AND', ''); }
+    if (postType == undefined && userId == undefined) { query = query.replace('WHERE', ''); }
+    if (postType == undefined || userId == undefined) { query = query.replace('AND', ''); }
     return query;
 }
 
