@@ -1,6 +1,9 @@
 --
 -- Table Structure for Table 'Posts'
 --
+
+USE rsocial; 
+
 CREATE TABLE Users(
     ID int NOT NULL AUTO_INCREMENT,
     name varchar(50) NOT NULL,
