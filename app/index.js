@@ -1,8 +1,13 @@
 const express = require("express");
-const bodyParser = require('body-parser');
-
+const fileUpload = require('express-fileupload');
 const routes = require('./routes/routes');
+const bodyParser = require('body-parser');
 const app = express();
+
+app.use(fileUpload({
+  createParentPath: true
+}));
+app.use(express.static('uploads'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
