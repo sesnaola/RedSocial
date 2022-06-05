@@ -6,5 +6,6 @@ const postsController = require('./../controllers/PostsController');
 router.get('/users', usersController.getAllUsers);
 router.get('/users/:id', usersController.getUser);
 router.get('/posts', postsController.getPosts);
+router.post('/users', usersController.createUser);
 
 module.exports = router;
