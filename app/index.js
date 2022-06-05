@@ -1,6 +1,7 @@
 const express = require("express");
 const fileUpload = require('express-fileupload');
 const routes = require('./routes/routes');
+const bodyParser = require('body-parser');
 const app = express();
 
 app.use(fileUpload({
@@ -8,6 +9,10 @@ app.use(fileUpload({
 }));
 app.use(express.static('uploads'));
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
 app.use(express.json());
 app.use('/', routes);
