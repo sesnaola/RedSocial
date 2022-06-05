@@ -1,7 +1,8 @@
 --
 -- Table Structure for Table 'Posts'
 --
-use rsocial;
+
+USE rsocial; 
 
 CREATE TABLE Users(
     ID int NOT NULL AUTO_INCREMENT,
