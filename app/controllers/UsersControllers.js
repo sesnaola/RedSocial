@@ -3,14 +3,16 @@ let users = require('./../models/Users');
 
 const getAllUsers = (request, response, next) => {
     conn.query("SELECT * FROM Users", (err, rows) => {
-        err ? response.json({ success: false, err, }) : response.json({ rows }.rows)
+        mapUsers(rows);
+        err ? response.json({ success: false, err, }) : response.json({ users })
     });
 };
 
 const getUser = (request, response, next) => {
     id = request.params.id
     conn.query(`SELECT * FROM Users WHERE ID=${id}`, (err, rows) => {
-        err ? response.json({ success: false, err, }) : response.json({ rows }.rows)
+        mapUsers(rows);
+        err ? response.json({ success: false, err, }) : response.json({ users })
     });
 };
 
@@ -64,3 +66,4 @@ const checkAdmin = (value) => {
 // }
 
 module.exports = { getAllUsers, getUser, createUser };
+

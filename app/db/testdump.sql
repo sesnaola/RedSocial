@@ -8,7 +8,7 @@ CREATE TABLE Users(
     ID int NOT NULL AUTO_INCREMENT,
     name varchar(50) NOT NULL,
     surname varchar(50) NOT NULL,
-    password BLOB NOT NULL,
+    password varchar(250) NOT NULL,
     mail varchar(250) NOT NULL,
     photo varchar(250),
     admin BOOL NOT NULL,
@@ -68,7 +68,7 @@ CREATE TABLE Posts(
        postType varchar(15) NOT NULL,
        path varchar(500) NOT NULL,
        creationDate int NOT NULL,
-       text BLOB,
+       text varchar(500),
        PRIMARY KEY(ID),
        FOREIGN KEY (UserID) REFERENCES Users(ID)
 );
