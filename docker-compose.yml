@@ -9,8 +9,8 @@ services:
       MYSQL_ROOT_PASSWORD: Welcome1
       MYSQL_DATABASE: rsocial
     restart: always
-  web-front:
-    container_name: web-front
+  app:
+    container_name: app
     build: ./app
     environment:
       MYSQL_DATABASE: rsocial
@@ -21,4 +21,10 @@ services:
       - "3080:3080"
     depends_on:
       - db
+    restart: on-failure
+  client:
+    container_name: client
+    build: ./client
+    ports:
+      - "8080:8080"
     restart: on-failure
