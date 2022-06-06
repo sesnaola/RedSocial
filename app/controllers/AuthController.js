@@ -23,19 +23,20 @@ const login = (request, response, next) => {
             }
             encryptedRequestPassword = Buffer.from(request.body.password).toString('base64')
             if (encryptedRequestPassword === result[0].password) {
-                const token = jwt.sign({
-                    id: result[0].id,
-                    mail: result[0].mail,
-                    password: result[0].password
-                }, 'secret', { expiresIn: '1h' });
-                return response.status(200).send({
-                    token: token,
-                    user: {
-                        id: result[0].id,
-                        mail: result[0].mail,
-                        password: result[0].password
-                    }
-                });
+                return response.status(200).json({ success: true, message: 'Welcome' });
+                // const token = jwt.sign({
+                //     id: result[0].ID,
+                //     mail: result[0].mail,
+                //     password: result[0].password
+                // }, 'secret', { expiresIn: '1h' });
+                // return response.status(200).send({
+                //     token: token,
+                //     user: {
+                //         id: result[0].ID,
+                //         mail: result[0].mail,
+                //         password: result[0].password
+                //     }
+                // });
             } else {
                 return response.status(401).send({
                     msg: 'Mail or password is incorrect!'
