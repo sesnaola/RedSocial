@@ -42,10 +42,15 @@ export default {
   methods: {
     async login() {
       try {
-        console.log(this.email, this.password);
         await socialnetwork.login(this.email, this.password);
+        // TODO save jwt in localStorage
+        const user = {
+          email: this.email,
+        };
+        socialnetwork.setUserLogged(user);
         this.$router.push("/");
       } catch (error) {
+        console.log(error);
         this.error = true;
       }
     },
