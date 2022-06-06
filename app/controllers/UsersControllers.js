@@ -13,9 +13,21 @@ const getUser = (request, response, next) => {
     if (!request) return response.json({ success: false, message: 'No userId' });
     conn.query(`SELECT * FROM Users WHERE ID=${id}`, (err, rows) => {
         mapUsers(rows);
+        err ? response.json({ success: false, err, }) : response.json({ users }.users)
+    });
+};
+
+const login = (request, response, next) => {
+    request.body.password = Buffer.from(request.body.password).toString('base64')
+    const { mail, password } = request.body;
+    if (!mail || !password) return response.json({ success: false, message: 'No email or password' });
+    conn.query(`SELECT * FROM Users WHERE mail='${mail}' AND password='${password}'`, (err, rows) => {
+        console.log(rows);
+        mapUsers(rows);
         err ? response.json({ success: false, err, }) : response.json({ users })
     });
 };
+
 
 const uploadProfileImage = (request, response, next) => {
     let check;
@@ -41,6 +53,24 @@ const uploadProfileImage = (request, response, next) => {
     }, 500);
 };
 
+const createUser = (request, response, next) => {
+    console.log(request.body);
+    checkNewUsers(request.body);
+    console.log(users);
+    conn.query(`INSERT INTO Users (name, surname, password, mail, photo, admin, creationDate) 
+        VALUES ('${users.name}', 
+        '${users.surname}', 
+        '${users.password}', 
+        '${users.mail}', 
+        '${users.photo}', 
+        '${users.admin}', 
+        '${users.creationDate}')`,
+        (err, rows) => {
+            err ? response.json({ success: false, err, }) : response.json({ success: true })
+        });
+
+}
+
 function queryFileUpload(request, response) {
     let image = request.files.image;
     route = "user" + request.body.userId + image.name;
@@ -63,24 +93,6 @@ function queryFileUpload(request, response) {
     });
 }
 
-const createUser = (request, response, next) => {
-    console.log(request.body);
-    checkNewUsers(request.body);
-    console.log(users);
-    conn.query(`INSERT INTO Users (name, surname, password, mail, photo, admin, creationDate) 
-        VALUES ('${users.name}', 
-        '${users.surname}', 
-        '${users.password}', 
-        '${users.mail}', 
-        '${users.photo}', 
-        '${users.admin}', 
-        '${users.creationDate}')`,
-        (err, rows) => {
-            err ? response.json({ success: false, err, }) : response.json({ success: true })
-        });
-
-}
-
 
 const checkNewUsers = (newUser) => {
     users.name = newUser.name.toString();
@@ -97,20 +109,20 @@ const checkAdmin = (value) => {
     return users.admin;
 }
 
- function mapUsers(value) {
-     users = value.map(user => {
-         return {
-             // id: user.ID,
-             name: user.name,
-             surname: user.surname,
-             password: user.password,
-             mail: user.mail,
-             photo: user.photo,
-             admin: user.admin,
-             creationDate: user.creationDate
-         };
-     });
- }
+function mapUsers(value) {
+    users = value.map(user => {
+        return {
+            // id: user.ID,
+            name: user.name,
+            surname: user.surname,
+            password: user.password,
+            mail: user.mail,
+            photo: user.photo,
+            admin: user.admin,
+            creationDate: user.creationDate
+        };
+    });
+}
 
-module.exports = { getAllUsers, getUser, createUser, uploadProfileImage };
+module.exports = { getAllUsers, getUser, createUser, uploadProfileImage, login };
 
