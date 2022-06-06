@@ -1,35 +1,32 @@
-const conn = require('./../db/dbConnection');
-let users = require('./../models/Users');
+const conn = require('../db/dbConnection');
+let users = require('../models/Users');
 
-const getAllUsers = (request, response, next) => {
-    conn.query("SELECT * FROM Users", (err, rows) => {
-        mapUsers(rows);
-        err ? response.json({ success: false, err, }) : response.json({ users })
-    });
-};
+const getUsers = (request, response, next) => {
+    query = "SELECT * FROM Users";
+    if (request.query.userId) query = query + ` WHERE ID=${request.query.userId}`;
 
-const getUser = (request, response, next) => {
-    id = request.params.id;
-    if (!request) return response.json({ success: false, message: 'No userId' });
-    conn.query(`SELECT * FROM Users WHERE ID=${id}`, (err, rows) => {
+    conn.query(query, (err, rows) => {
         mapUsers(rows);
         err ? response.json({ success: false, err, }) : response.json({ users }.users)
     });
 };
 
-const login = (request, response, next) => {
-    request.body.password = Buffer.from(request.body.password).toString('base64')
-    const { mail, password } = request.body;
-    if (!mail || !password) return response.json({ success: false, message: 'No email or password' });
-    conn.query(`SELECT * FROM Users WHERE mail='${mail}' AND password='${password}'`, (err, rows) => {
-        console.log(rows);
-        mapUsers(rows);
-        err ? response.json({ success: false, err, }) : response.json({ users })
-    });
-};
+const postUser = (request, response, next) => {
+    checkNewUsers(request.body);
+    conn.query(`INSERT INTO Users (name, surname, password, mail, photo, admin, creationDate) 
+        VALUES ('${users.name}', 
+        '${users.surname}', 
+        '${users.password}', 
+        '${users.mail}', 
+        '${users.photo}', 
+        '${users.admin}', 
+        '${users.creationDate}')`,
+        (err, rows) => {
+            err ? response.json({ success: false, err, }) : response.json({ success: true })
+        });
+}
 
-
-const uploadProfileImage = (request, response, next) => {
+const postProfileImage = (request, response, next) => {
     let check;
 
     if (!request.body.userId) return response.json({ success: false, message: 'No userId' });
@@ -53,23 +50,6 @@ const uploadProfileImage = (request, response, next) => {
     }, 500);
 };
 
-const createUser = (request, response, next) => {
-    console.log(request.body);
-    checkNewUsers(request.body);
-    console.log(users);
-    conn.query(`INSERT INTO Users (name, surname, password, mail, photo, admin, creationDate) 
-        VALUES ('${users.name}', 
-        '${users.surname}', 
-        '${users.password}', 
-        '${users.mail}', 
-        '${users.photo}', 
-        '${users.admin}', 
-        '${users.creationDate}')`,
-        (err, rows) => {
-            err ? response.json({ success: false, err, }) : response.json({ success: true })
-        });
-
-}
 
 function queryFileUpload(request, response) {
     let image = request.files.image;
@@ -93,7 +73,6 @@ function queryFileUpload(request, response) {
     });
 }
 
-
 const checkNewUsers = (newUser) => {
     users.name = newUser.name.toString();
     users.surname = newUser.surname.toString();
@@ -112,7 +91,7 @@ const checkAdmin = (value) => {
 function mapUsers(value) {
     users = value.map(user => {
         return {
-            // id: user.ID,
+            id: user.ID,
             name: user.name,
             surname: user.surname,
             password: user.password,
@@ -124,5 +103,5 @@ function mapUsers(value) {
     });
 }
 
-module.exports = { getAllUsers, getUser, createUser, uploadProfileImage, login };
+module.exports = { getUsers, postUser, postProfileImage };
 

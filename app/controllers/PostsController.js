@@ -4,7 +4,6 @@ let posts = require('./../models/PostsModel');
 
 
 const getPosts = (request, response, next) => {
-    console.log(request.query);
     let postType = request.query.postType;
     let userId = request.query.userId;
     let amount = request.query.amount;
