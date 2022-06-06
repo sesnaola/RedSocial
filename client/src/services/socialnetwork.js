@@ -14,10 +14,9 @@ export default {
   getUsers() {
     return SocialNetwork.get("users");
   },
-  login(email, password) {
-    const user = { email, password };
-    return axios.post("login", user);
-    //return SocialNetwork.post("login", user);
-    //return SocialNetwork.get("users/1");
+  // TODO Change mail to email
+  login(mail, password) {
+    const user = { mail, password };
+    return SocialNetwork.post("login", user);
   },
 };

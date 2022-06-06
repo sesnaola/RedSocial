@@ -32,7 +32,7 @@
 </template>
 
 <script>
-//import socialnetwork from "@/services/socialnetwork";
+import socialnetwork from "@/services/socialnetwork";
 export default {
   data: () => ({
     email: "",
@@ -43,8 +43,8 @@ export default {
     async login() {
       try {
         console.log(this.email, this.password);
-        //await socialnetwork.login(this.email, this.password);
-        //this.$router.push("/");
+        await socialnetwork.login(this.email, this.password);
+        this.$router.push("/");
       } catch (error) {
         this.error = true;
       }
