@@ -10,6 +10,7 @@ router.get('/users/:id', usersController.getUser);
 router.post('/profile-image', usersController.uploadProfileImage);
 router.post('/users', usersController.createUser);
 router.post('/login', authController.login);
+router.get('/login', usersController.login);
 router.get('/posts', postsController.getPosts);
 
 module.exports = router;
