@@ -7,6 +7,7 @@ const postsController = require('./../controllers/PostsController');
 router.get('/users', usersController.getUsers);
 router.post('/profile-image', usersController.postProfileImage);
 router.post('/users', usersController.postUser);
+router.delete('/users', usersController.deleteUsers);
 router.post('/login', authController.login);
 router.get('/posts', postsController.getPosts);
 router.post('/posts', postsController.postPosts);
