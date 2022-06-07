@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(express.json());
-app.use('/', routes);
+app.use('/api/v1/', routes);
 
 const listener = app.listen(process.env.PORT || 3080, () => {
   console.log('Listening on port ' + listener.address().port)
