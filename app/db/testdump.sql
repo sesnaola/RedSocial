@@ -5,7 +5,7 @@
 USE rsocial; 
 
 CREATE TABLE Users(
-    ID int NOT NULL AUTO_INCREMENT,
+    id int NOT NULL AUTO_INCREMENT,
     name varchar(50) NOT NULL,
     surname varchar(50) NOT NULL,
     password varchar(250) NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE Users(
     photo varchar(250),
     admin BOOL NOT NULL,
     creationDate int NOT NULL,
-    PRIMARY KEY(ID)
+    PRIMARY KEY(id)
 );
 
 INSERT INTO
@@ -64,18 +64,18 @@ VALUES
 -- Table Structure for Table 'Posts'
 --
 CREATE TABLE Posts(
-    ID int NOT NULL AUTO_INCREMENT,
-    userID int NOT NULL,
+    id int NOT NULL AUTO_INCREMENT,
+    userId int NOT NULL,
     postType varchar(15) NOT NULL,
     path varchar(500) NOT NULL,
     creationDate int NOT NULL,
     text varchar(500),
-    PRIMARY KEY(ID),
-    FOREIGN KEY (UserID) REFERENCES Users(ID)
+    PRIMARY KEY(id),
+    FOREIGN KEY (UserId) REFERENCES Users(id)
 );
 
 INSERT INTO
-    Posts (userID, postType, path, creationDate, text)
+    Posts (userId, postType, path, creationDate, text)
 VALUES
     (
         1,
@@ -86,7 +86,7 @@ VALUES
     );
 
 INSERT INTO
-    Posts (userID, postType, path, creationDate, text)
+    Posts (userId, postType, path, creationDate, text)
 VALUES
     (
         1,
