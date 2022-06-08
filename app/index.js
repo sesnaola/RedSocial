@@ -1,29 +1,22 @@
 const express = require("express");
-const mysql = require("mysql");
+const fileUpload = require('express-fileupload');
+const routes = require('./routes/routes');
+const bodyParser = require('body-parser');
 const app = express();
 
-const connection = mysql.createPool({
-  connectionLimit: 10,
-  host: process.env.MYSQL_HOST || "localhost",
-  user: process.env.MYSQL_USER || "admin",
-  password: process.env.MYSQL_PASSWORD || "Welcome1",
-  database: process.env.MYSQL_DATABASE || "rsocial",
-});
+app.use(fileUpload({
+  createParentPath: true
+}));
+app.use(express.static('uploads'));
 
-app.get("/", (req, res) => {
-  connection.query("SELECT * FROM Users", (err, rows) => {
-    if (err) {
-      res.json({
-        success: false,
-        err,
-      });
-    } else {
-      res.json({
-        success: true,
-        rows,
-      });
-    }
-  });
-});
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
-app.listen(3080, () => console.log("listening on port 3080"));
+app.use(express.json());
+app.use('/', routes);
+
+const listener = app.listen(process.env.PORT || 3080, () => {
+  console.log('Listening on port ' + listener.address().port)
+})
