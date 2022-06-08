@@ -7,12 +7,6 @@ Incluye distintas funciones, como un CRUD de usuarios y posts, login, registro y
 
 ## Instalación
 
-Instalar los paquetes de npm
-
-```bash
-  npm install
-```
-
 Iniciar contenedor de Docker
 
 ```bash
@@ -23,7 +17,11 @@ Iniciar contenedor de Docker
 
 Es necesario estar identificado para  todas las peticiones, excepto para login y register.
 
-### Get all Users
+### URL
+```http
+  localhost:3080/api/v1
+```
+<!-- ### Get Users
 
 Devuelve todos los usuarios
 
@@ -33,7 +31,7 @@ Devuelve todos los usuarios
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
-| `api_key` | `string` | **Required**. Your API key |
+| `id` | `number` | **Required**. Your API key |
 
 ### Get user
 
@@ -45,7 +43,7 @@ Devuelve el usuario con la ID especificada
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**. Id of item to fetch |
+| `id`      | `string` | **Required**. Id of item to fetch | -->
 
 ## Autores
 
