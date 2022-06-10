@@ -1,9 +1,10 @@
 const conn = require('../db/dbConnection');
+let helper = require('./../helpers/checkIfUserExists');
 let users = require('../models/Users');
 
 const getUsers = (request, response, next) => {
     query = "SELECT * FROM Users";
-    if (request.query.userId) query = query + ` WHERE ID=${request.query.userId}`;
+    if (request.query.userId) query = query + ` WHERE id=${request.query.userId}`;
 
     conn.query(query, (err, rows) => {
         mapUsers(rows);
@@ -27,27 +28,19 @@ const postUser = (request, response, next) => {
 }
 
 const postProfileImage = (request, response, next) => {
-    let check;
-
     if (!request.body.userId) return response.json({ success: false, message: 'No userId' });
     if (!request.files) return response.json({ success: false, message: 'No file uploaded' });
     if (!request.files.image) return response.json({ success: false, message: 'No image uploaded' });
     if (!request.files.image.mimetype.startsWith('image/jpeg') && !request.files.image.mimetype.startsWith('image/png')) return response.json({ success: false, message: 'Wrong file type' });
     if (request.files.image.size > 1000000) return response.json({ success: false, message: 'File too large' });
 
-    const checkIfUserExists = () => {
-        conn.query(`SELECT * FROM Users WHERE ID=${request.body.userId}`, (err, result, rows) => { Object.keys(result).length === 0 ? check = false : check = true; });
-        return check;
-    }
-    check = checkIfUserExists();
-
-    setTimeout(function () {
-        if (check === false) {
-            return response.json({ success: false, message: 'User not found' });
-        } else {
+    helper.checkUser(request.body.userId).then(result => {
+        if (result === true) {
             queryFileUpload(request, response);
+        } else {
+            return response.json({ success: false, message: 'User not found' });
         }
-    }, 500);
+    });
 };
 
 
@@ -59,7 +52,7 @@ function queryFileUpload(request, response) {
         if (err)
             return response.status(500).send(err);
 
-        conn.query(`UPDATE Users SET photo='${route}' WHERE ID=${request.body.userId}`, (err) => {
+        conn.query(`UPDATE Users SET photo='${route}' WHERE id=${request.body.userId}`, (err) => {
             if (err)
                 return response.json({ success: false, err, });
             return response.json({
@@ -78,8 +71,9 @@ const checkNewUsers = (newUser) => {
     users.surname = newUser.surname.toString();
     users.password = Buffer.from(newUser.password).toString('base64');
     users.mail = newUser.mail.toString();
-    users.photo = newUser.photo.toString();
-    users.admin = checkAdmin(newUser.admin);
+    users.photo = "";
+    // users.admin = checkAdmin(newUser.admin); Esto se usara cuando editemos el usuario
+    users.admin = 0;
     users.creationDate = Math.floor(Date.now() / 1000);
 }
 
@@ -91,7 +85,7 @@ const checkAdmin = (value) => {
 function mapUsers(value) {
     users = value.map(user => {
         return {
-            id: user.ID,
+            id: user.id,
             name: user.name,
             surname: user.surname,
             password: user.password,

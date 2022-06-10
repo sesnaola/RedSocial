@@ -9,5 +9,6 @@ router.post('/profile-image', usersController.postProfileImage);
 router.post('/users', usersController.postUser);
 router.post('/login', authController.login);
 router.get('/posts', postsController.getPosts);
+router.post('/posts', postsController.postPosts);
 
 module.exports = router;
