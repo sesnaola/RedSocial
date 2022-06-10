@@ -1,6 +1,7 @@
 const conn = require('../db/dbConnection');
 let helper = require('./../helpers/checkIfUserExists');
 let users = require('../models/Users');
+const jwt = require('jsonwebtoken');
 
 const getUsers = (request, response, next) => {
     query = "SELECT * FROM Users";
@@ -55,13 +56,43 @@ const postProfileImage = (request, response, next) => {
     if (request.files.image.size > 1000000) return response.json({ success: false, message: 'File too large' });
 
     helper.checkUser(request.body.userId).then(result => {
-        if (result === true) {
+        if (result) {
             queryFileUpload(request, response);
         } else {
             return response.json({ success: false, message: 'User not found' });
         }
     });
 };
+
+const deleteUsers = (request, response, next) => {
+    decodedToken = jwt.decode(request.headers.authorization)
+    if (!request.body.userId) return response.json({ success: false, message: 'No userId' });
+    checkIfUserExists(request, response);
+};
+
+function checkIfUserExists(request, response) {
+    helper.checkUser(request.body.userId).then(result => {
+        if (result) {
+            chechIfItsAdmin(request, response);
+        } else {
+            return response.json({ success: false, message: 'User to delete does not exists' });
+        };
+    });
+}
+
+function chechIfItsAdmin(request, response) {
+    helper.checkUser(decodedToken.id).then(result => {
+        if (result) {
+            if (checkAdmin(result.admin)) {
+                conn.query(`DELETE FROM Users WHERE id=${request.body.userId}`, (err, rows) => {
+                    err ? response.json({ success: false, err, }) : response.json({ success: true, message: 'User deleted' });
+                });
+            } else {
+                return response.json({ success: false, message: 'You are not admin' });
+            }
+        }
+    });
+}
 
 function queryFileUpload(request, response) {
     let image = request.files.image;
@@ -98,7 +129,6 @@ const checkPostUsersData = (newUser) => {
     users.password = newUser.password.toString();
     users.mail = newUser.mail.toString();
     users.photo = "";
-    // users.admin = checkAdmin(newUser.admin); Esto se usara cuando editemos el usuario
     users.admin = 0;
     users.creationDate = Math.floor(Date.now() / 1000);
 }
@@ -123,5 +153,4 @@ function mapUsers(value) {
     });
 }
 
-module.exports = { getUsers, postUser, putUser, postProfileImage };
-
+module.exports = { getUsers, postUser, putUser, deleteUsers, postProfileImage };

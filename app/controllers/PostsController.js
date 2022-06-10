@@ -1,6 +1,6 @@
 const { query } = require('express');
 const conn = require('./../db/dbConnection');
-let posts = require('./../models/PostsModel');
+let posts = require('./../models/Posts');
 let helper = require('./../helpers/checkIfUserExists');
 
 
@@ -26,7 +26,7 @@ const postPosts = (request, response, next) => {
     if (fileToUpload) { fileToUpload = request.files.file; checkFileType(); }
 
     helper.checkUser(request.body.userId).then(result => {
-        if (result === true) {
+        if (result) {
             selectQueryOption(response);
         } else {
             response.json({ success: false, message: 'User does not exist' });
