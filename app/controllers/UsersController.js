@@ -14,7 +14,7 @@ const getUsers = (request, response, next) => {
 };
 
 const postUser = (request, response, next) => {
-    checkNewUsers(request.body);
+    checkPostUsersData(request.body);
     conn.query(`INSERT INTO Users (name, surname, password, mail, photo, admin, creationDate) 
         VALUES ('${users.name}', 
         '${users.surname}', 
@@ -26,6 +26,26 @@ const postUser = (request, response, next) => {
         (err, rows) => {
             err ? response.json({ success: false, err, }) : response.json({ success: true })
         });
+}
+
+const putUser = (request, response, next) => {
+    query = "UPDATE Users SET "
+    if (!request.body.userId) return response.json({ success: false, message: 'No userId' });
+    if (!request.body.name && !request.body.surname && !request.body.password && !request.body.mail) return response.json({ success: false, message: 'No data to update' });
+    checkPutUsersData(request);
+
+    helper.checkUser(request.body.userId).then(result => {
+        if (result === true) {
+            query = query.split("'  ").join("', ");
+
+            conn.query(query + ` WHERE ID = ${request.body.userId}`,
+                (err, rows) => {
+                    err ? response.json({ success: false, err, }) : response.json({ success: true })
+                });
+        } else {
+            response.json({ success: false, message: 'User does not exist' });
+        }
+    });
 }
 
 const postProfileImage = (request, response, next) => {
@@ -96,10 +116,17 @@ function queryFileUpload(request, response) {
     });
 }
 
-const checkNewUsers = (newUser) => {
+function checkPutUsersData(request) {
+    if (request.body.name) query += ` name = '${request.body.name.toString()}' `;
+    if (request.body.surname) query += ` surname = '${request.body.surname.toString()}' `;
+    if (request.body.password) query += ` password = '${request.body.password.toString()}' `;
+    if (request.body.mail) query += ` mail = '${request.body.mail.toString()}' `;
+}
+
+const checkPostUsersData = (newUser) => {
     users.name = newUser.name.toString();
     users.surname = newUser.surname.toString();
-    users.password = Buffer.from(newUser.password).toString('base64');
+    users.password = newUser.password.toString();
     users.mail = newUser.mail.toString();
     users.photo = "";
     users.admin = 0;
@@ -126,5 +153,4 @@ function mapUsers(value) {
     });
 }
 
-module.exports = { getUsers, postUser, deleteUsers, postProfileImage };
-
+module.exports = { getUsers, postUser, putUser, deleteUsers, postProfileImage };
