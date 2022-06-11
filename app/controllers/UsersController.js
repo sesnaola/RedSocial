@@ -5,9 +5,11 @@ const jwt = require('jsonwebtoken');
 
 const getUsers = (request, response, next) => {
     query = "SELECT * FROM Users";
-    if (request.query.userId) query = query + ` WHERE id=${request.query.userId}`;
+    if (request.params.id) query = query + ` WHERE id=${request.params.id}`;
     conn.query(query, (err, rows) => {
+        if (!rows) return response.json({ success: false, message: 'No users found' });
         mapUsers(rows);
+        if (rows.length == 0) return response.json({ success: false, message: 'User not found' });
         err ? response.json({ success: false, err, }) : response.json({ users }.users)
     });
 };
