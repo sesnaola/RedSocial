@@ -1,7 +1,8 @@
 --
 -- Table Structure for Table 'Posts'
 --
-USE rsocial;
+
+USE rsocial; 
 
 CREATE TABLE Users(
     id int NOT NULL AUTO_INCREMENT,
@@ -27,34 +28,12 @@ INSERT INTO
     )
 VALUES
     (
-        'admin',
-        'rsocial',
-        -- password: admin
-        "YWRtaW4=",
-        'admin@mail.com',
-        '',
-        1,
-        1654812652
-    );
-
-INSERT INTO
-    Users (
-        name,
-        surname,
-        password,
-        mail,
-        photo,
-        admin,
-        creationDate
-    )
-VALUES
-    (
         'Alberto',
         'Jimenez',
         -- password: pear
         "cGVhcg==",
         'alberto@mail.com',
-        '',
+        '/tmp/alberto.png',
         0,
         1653926628
     );
@@ -76,7 +55,7 @@ VALUES
         -- password: coconut
         "Y29jb251dA==",
         'petronio@mail.com',
-        '',
+        '/tmp/petronio.png',
         0,
         1653931529
     );
