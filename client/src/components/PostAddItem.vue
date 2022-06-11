@@ -2,6 +2,13 @@
   <div class="postadd">
     <h1 class="title">Add new Post</h1>
     <form action class="form">
+      <label class="form-label">Seleccionar Publicación</label>
+      <select class="form-input" v-model="selected">
+        <option>Texto</option>
+        <option>Imagen</option>
+        <option>Audio</option>
+        <option>Video</option>
+      </select>
       <label class="form-label" for="message">Añadir nueva Publicación</label>
       <textarea
         id="message"
@@ -12,16 +19,12 @@
         placeholder="Descripción"
       ></textarea>
       <br />
-      <label class="form-label">Seleccionar Publicación</label>
-      <select class="form-input" v-model="selected">
-        <option disabled value="">Seleccionar</option>
-        <option>Imagen</option>
-        <option>Audio</option>
-        <option>Video</option>
-      </select>
       <br />
-      <div>Subir: {{ selected }}</div>
-      <input class="form-input" type="file" name="imagen" />
+      <div v-if="selected != 'Texto'">
+        <label class="form-label">Subir: {{ selected }}</label>
+        <input class="form-input" type="file" name="imagen" />
+      </div>
+      <input class="form-submit" type="submit" value="Publicar" />
     </form>
   </div>
 </template>
@@ -32,7 +35,7 @@ export default {
   },
   data() {
     return {
-      selected: "",
+      selected: "Texto",
     };
   },
 };
