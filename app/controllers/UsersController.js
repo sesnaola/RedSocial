@@ -6,7 +6,6 @@ const jwt = require('jsonwebtoken');
 const getUsers = (request, response, next) => {
     query = "SELECT * FROM Users";
     if (request.query.userId) query = query + ` WHERE id=${request.query.userId}`;
-
     conn.query(query, (err, rows) => {
         mapUsers(rows);
         err ? response.json({ success: false, err, }) : response.json({ users }.users)
@@ -14,36 +13,57 @@ const getUsers = (request, response, next) => {
 };
 
 const postUser = (request, response, next) => {
-    checkPostUsersData(request.body);
-    conn.query(`INSERT INTO Users (name, surname, password, mail, photo, admin, creationDate) 
-        VALUES ('${users.name}', 
-        '${users.surname}', 
-        '${users.password}', 
-        '${users.mail}', 
-        '${users.photo}', 
-        '${users.admin}', 
-        '${users.creationDate}')`,
-        (err, rows) => {
-            err ? response.json({ success: false, err, }) : response.json({ success: true })
-        });
+    if (!request.body.name) return response.json({ success: false, message: 'No name' });
+    if (!request.body.surname) return response.json({ success: false, message: 'No surname' });
+    if (!request.body.password) return response.json({ success: false, message: 'No password' });
+    if (!request.body.mail) return response.json({ success: false, message: 'No mail' });
+
+    conn.query(`select * from Users where mail='${request.body.mail}'`, (err, rows) => {
+        if (err) return response.json({ success: false, err });
+        if (rows.length > 0) return response.json({ success: false, message: 'Mail already exists' });
+        checkPostUsersData(request.body);
+        conn.query(`INSERT INTO Users (name, surname, password, mail, photo, admin, creationDate) 
+                VALUES ('${users.name}', 
+                '${users.surname}', 
+                '${users.password}', 
+                '${users.mail}', 
+                '${users.photo}', 
+                '${users.admin}', 
+                '${users.creationDate}')`,
+            (err, rows) => {
+                err ? response.json({ success: false, err, }) : response.json({ success: true })
+
+            });
+    });
 }
 
+
 const putUser = (request, response, next) => {
-    query = "UPDATE Users SET "
-    if (!request.body.userId) return response.json({ success: false, message: 'No userId' });
-    if (!request.body.name && !request.body.surname && !request.body.password && !request.body.mail) return response.json({ success: false, message: 'No data to update' });
-    checkPutUsersData(request);
+    if (!request.headers.authorization) return response.json({ success: false, message: 'No token provided' });
 
-    helper.checkUser(request.body.userId).then(result => {
-        if (result === true) {
-            query = query.split("'  ").join("', ");
+    decodedToken = jwt.decode(request.headers.authorization);
+    if (!decodedToken.id) return response.json({ success: false, message: 'Token invalid' });
 
-            conn.query(query + ` WHERE ID = ${request.body.userId}`,
-                (err, rows) => {
-                    err ? response.json({ success: false, err, }) : response.json({ success: true })
+    helper.checkUser(decodedToken.id).then(result => {
+        if (result) {
+            if (result.id != request.body.userId) {
+                return response.json({
+                    success: false, message: 'The only one who can modify a user is the user himself'
                 });
-        } else {
-            response.json({ success: false, message: 'User does not exist' });
+            } else {
+                query = "UPDATE Users SET "
+                if (!request.body.userId) return response.json({ success: false, message: 'No userId' });
+                if (!request.body.name && !request.body.surname && !request.body.password && !request.body.mail) return response.json({ success: false, message: 'No data to update' });
+                checkPutUsersData(request);
+
+                helper.checkUser(request.body.userId).then(result => {
+                    if (result) {
+                        arrangePutUsersQuery(request, response);
+                    } else {
+                        response.json({ success: false, message: 'User does not exist' });
+                    }
+                });
+            }
         }
     });
 }
@@ -69,6 +89,15 @@ const deleteUsers = (request, response, next) => {
     if (!request.body.userId) return response.json({ success: false, message: 'No userId' });
     checkIfUserExists(request, response);
 };
+
+function arrangePutUsersQuery(request, response) {
+    query = query.split("'  ").join("', ");
+
+    conn.query(query + ` WHERE ID = ${request.body.userId}`,
+        (err, rows) => {
+            err ? response.json({ success: false, err, }) : response.json({ success: true });
+        });
+}
 
 function checkIfUserExists(request, response) {
     helper.checkUser(request.body.userId).then(result => {
