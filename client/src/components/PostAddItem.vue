@@ -1,7 +1,7 @@
 <template>
   <div class="postadd">
     <h1 class="title">Add new Post</h1>
-    <form action class="form">
+    <form action class="form" @submit.prevent="publicar">
       <label class="form-label">Seleccionar Publicación</label>
       <select class="form-input" v-model="selected">
         <option>Texto</option>
@@ -18,17 +18,16 @@
         required
         placeholder="Descripción"
       ></textarea>
-      <br />
-      <br />
       <div v-if="selected != 'Texto'">
         <label class="form-label">Subir: {{ selected }}</label>
         <input class="form-input" type="file" name="imagen" />
       </div>
-      <input class="form-submit" type="submit" value="Publicar" />
+      <input class="form-submit" type="submit" value="publicar" />
     </form>
   </div>
 </template>
 <script>
+import socialnetwork from "@/services/socialnetwork";
 export default {
   props: {
     msg: String,
@@ -36,7 +35,28 @@ export default {
   data() {
     return {
       selected: "Texto",
+      message: "",
     };
+  },
+  methods: {
+    async publicar() {
+      const postType = this.selected;
+      const text = this.message;
+      const userId = "1";
+
+      let userCookie = socialnetwork.getUserLogged();
+      console.log(userCookie);
+      try {
+        console.log("llamada api");
+        await socialnetwork
+          .publicar(userId, postType, text)
+          .then((res) =>
+            socialnetwork.setUserLogged(res.data.token, res.data.user.id)
+          );
+      } catch (error) {
+        this.error = error.message;
+      }
+    },
   },
 };
 </script>

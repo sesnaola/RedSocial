@@ -39,4 +39,12 @@ export default {
     };
     return SocialNetwork.post("users", users);
   },
+  publicar(userId, postType, text) {
+    const postadd = {
+      userId,
+      postType,
+      text,
+    };
+    return SocialNetwork.post("/posts", postadd);
+  },
 };
