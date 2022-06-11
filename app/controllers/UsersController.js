@@ -9,6 +9,7 @@ const getUsers = (request, response, next) => {
     conn.query(query, (err, rows) => {
         if (!rows) return response.json({ success: false, message: 'No users found' });
         mapUsers(rows);
+        if (rows.length == 0) return response.json({ success: false, message: 'User not found' });
         err ? response.json({ success: false, err, }) : response.json({ users }.users)
     });
 };

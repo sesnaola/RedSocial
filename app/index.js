@@ -3,10 +3,13 @@ const fileUpload = require('express-fileupload');
 const routes = require('./routes/routes');
 const bodyParser = require('body-parser');
 const app = express();
+const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 
+
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(cors());
 app.use(fileUpload({ createParentPath: true }));
 app.use(express.static('uploads'));
 app.use(bodyParser.json());
