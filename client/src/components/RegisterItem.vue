@@ -35,6 +35,7 @@
         class="form-input"
         type="password"
         id="password"
+        required
         placeholder="Password"
       />
       <label class="form-label" for="#password-repeat"
@@ -45,8 +46,12 @@
         class="form-input"
         type="password"
         id="password-repeat"
+        required
         placeholder="Password"
       />
+      <p v-if="error" class="error">
+        {{ error }}
+      </p>
       <input class="form-submit" type="submit" value="Sign Up" />
     </form>
   </div>
@@ -57,16 +62,22 @@ import socialnetwork from "@/services/socialnetwork";
 
 export default {
   data: () => ({
+    name: "",
+    surname: "",
     email: "",
     password: "",
     passwordRepeat: "",
-    error: false,
+    error: "",
   }),
   methods: {
+    // TODO - Implementar error en el formulario de registro (en el mismo componente)
     async register() {
       const mail = this.email;
       const pass = this.password;
       try {
+        if (this.password != this.passwordRepeat) {
+          throw new Error("Passwords don't match");
+        }
         await socialnetwork
           .register(this.name, this.surname, this.email, btoa(this.password))
           .then(function () {
@@ -78,7 +89,7 @@ export default {
           });
         this.$router.push("/");
       } catch (error) {
-        console.log(error);
+        this.error = error.message;
       }
     },
   },
