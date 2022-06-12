@@ -1,9 +1,16 @@
+/* eslint-disable prettier/prettier */
 <template>
   <div class="posts">
+    <!-- Title post with tailwind -->
     <div class="posts-header">
-      <h2>Posts</h2>
+      <h2 class="text-5xl font-bold leading-normal mt-0">Posts</h2>
     </div>
-    <PostItem v-for="post in posts" :key="post.id" :post="post" />
+    <div class="w-full mx-auto lg:w-1/2 bg-white mb-4">
+      <div
+        class="p-3 text-lg font-bold border-b border-solid border-grey-light"
+      ></div>
+      <PostItem v-for="post in posts" :key="post.id" :post="post" />
+    </div>
   </div>
 </template>
 

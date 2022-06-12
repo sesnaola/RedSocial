@@ -1,12 +1,9 @@
 <template>
   <div class="home">
-    <NavBar v-if="isAutenticate" />
-    <div class="home__content">
-      <div class="home__content__title">
-        <h1 class="text-3xl font-semibold text-slate-900">HOME</h1>
-      </div>
+    <div v-if="isAutenticate">
+      <NavBar />
       <div class="home__content__body">
-        <PostsView v-if="isAutenticate" />
+        <PostsView />
       </div>
     </div>
     <LoginView v-if="!isAutenticate" />
