@@ -12,12 +12,17 @@ const SocialNetwork = axios.create({
 
 export default {
   setUserLogged(token, userId) {
-    Cookies.set("userLogged", { token, userId });
+    Cookies.set("userToken", token);
+    Cookies.set("userLogged", userId);
   },
   getUserLogged() {
     return Cookies.get("userLogged");
   },
+  getUserToken() {
+    return Cookies.get("userToken");
+  },
   deleteUserLogged() {
+    Cookies.remove("userToken");
     Cookies.remove("userLogged");
   },
   login(mail, password) {
@@ -29,6 +34,9 @@ export default {
   },
   getUsers() {
     return SocialNetwork.get("/users");
+  },
+  getUser(userId) {
+    return SocialNetwork.get(`/users?userId=${userId}`);
   },
   register(name, surname, mail, password) {
     const users = {
