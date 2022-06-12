@@ -26,14 +26,22 @@
         <div class="mb-4">
           <p class="mb-6">{{ post.text }}</p>
           <!-- Show post data if not is text -->
-          <!-- <p>
+          <p v-if="isPostText">
             <a href="#"
               ><img
-                src="{{ asset('/img/twitter/tweet1.jpg') }}"
+                src="localhost:3080/{{ post.path }}"
                 alt="tweet image"
                 class="border border-solid border-grey-light rounded-sm"
             /></a>
-          </p> -->
+          </p>
+          <p v-if="isPostVideo">
+            <a href="#"
+              ><img
+                src="localhost:3080/{{ post.path }}"
+                alt="tweet image"
+                class="border border-solid border-grey-light rounded-sm"
+            /></a>
+          </p>
         </div>
       </div>
     </div>
@@ -42,7 +50,6 @@
 
 <script>
 import socialnetwork from "@/services/socialnetwork";
-console.log(socialnetwork.getUserLogged());
 export default {
   props: {
     post: {
@@ -53,9 +60,11 @@ export default {
   data() {
     return {
       // Get user from store
-      user: socialnetwork.getUser(socialnetwork.getUserLogged()).then((res) => {
+      user: socialnetwork.getUser(this.post.userId).then((res) => {
         this.user = res.data[0];
       }),
+      isPostText: this.post.type === "text",
+      isPostVideo: this.post.type === "video",
     };
   },
 };
