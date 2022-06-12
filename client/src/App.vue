@@ -1,12 +1,21 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link> |
-    <router-link to="/login">Login</router-link> |
-    <router-link to="/register">Register</router-link>
-    <router-view />
+  <nav
+    class="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800"
+  >
+    <HomeView />
   </nav>
 </template>
+
+<script>
+import HomeView from "@/views/HomeView.vue";
+
+export default {
+  name: "App",
+  components: {
+    HomeView,
+  },
+};
+</script>
 
 <style lang="scss">
 #app {

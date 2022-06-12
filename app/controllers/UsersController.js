@@ -5,7 +5,8 @@ const jwt = require('jsonwebtoken');
 
 async function getUsers(request, response, next) {
     query = "SELECT * FROM Users";
-    if (request.params.id) query = query + ` WHERE id=${request.params.id}`;
+    if (request.query.userId) query = query + ` WHERE id=${request.query.userId}`;
+
     conn.query(query, (err, rows) => {
         if (!rows) return response.status(404).json({ success: false, message: 'No users found' });
         mapUsers(rows);
@@ -36,8 +37,19 @@ const postUser = (request, response, next) => {
 
             });
     });
+    checkPostUsersData(request.body);
+    conn.query(`INSERT INTO Users (name, surname, password, mail, photo, admin, creationDate) 
+        VALUES ('${users.name}', 
+        '${users.surname}', 
+        '${users.password}', 
+        '${users.mail}', 
+        '${users.photo}', 
+        '${users.admin}', 
+        '${users.creationDate}')`,
+        (err, rows) => {
+            err ? response.json({ success: false, err, }) : response.json({ success: true })
+        });
 }
-
 
 const putUser = (request, response, next) => {
     decodedToken = jwt.decode(request.headers.authorization);
@@ -59,8 +71,21 @@ const putUser = (request, response, next) => {
                     } else {
                         response.status(404).json({ success: false, message: 'User does not exist' });
                     }
+    query = "UPDATE Users SET "
+    if (!request.body.userId) return response.json({ success: false, message: 'No userId' });
+    if (!request.body.name && !request.body.surname && !request.body.password && !request.body.mail) return response.json({ success: false, message: 'No data to update' });
+    checkPutUsersData(request);
+
+    helper.checkUser(request.body.userId).then(result => {
+        if (result === true) {
+            query = query.split("'  ").join("', ");
+
+            conn.query(query + ` WHERE ID = ${request.body.userId}`,
+                (err, rows) => {
+                    err ? response.json({ success: false, err, }) : response.json({ success: true })
                 });
-            }
+        } else {
+            response.json({ success: false, message: 'User does not exist' });
         }
     });
 }

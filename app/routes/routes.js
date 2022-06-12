@@ -16,7 +16,6 @@ router.use((request, response, next) => {
 });
 
 router.get('/users', usersController.getUsers);
-router.get('/users/:id?', usersController.getUsers);
 router.post('/users', usersController.postUser);
 router.put('/users', usersController.putUser);
 router.delete('/users', usersController.deleteUsers);
