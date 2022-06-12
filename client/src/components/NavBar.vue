@@ -11,28 +11,6 @@
         </button>
       </div>
       <!-- user image with dropdown option align right for close sesion with tailwindcss -->
-      <div class="flex items-center justify-end">
-        <div class="relative">
-          <img
-            class="rounded-full h-10 w-10"
-            src="https://i.pravatar.cc/100"
-            alt="avatar"
-          />
-        </div>
-        <div class="ml-3">
-          <div class="text-sm">
-            <p class="text-gray-600 dark:text-gray-400">pepe@mail.com</p>
-            <div class="-mt-1">
-              <button
-                @click="logout"
-                class="text-sm font-medium leading-5 text-red-500 hover:text-red-700 transition duration-150 ease-in-out"
-              >
-                Sign out
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
       <!-- end user image with dropdown option align right for close sesion with tailwindcss -->
       <UserItem v-if="isAutenticate" />
     </div>
@@ -48,11 +26,11 @@ export default {
   name: "NavBar",
   computed: {},
   components: { UserItem },
-  methods: {
-    logout() {
-      socialnetwork.logout();
-      window.location.reload();
-    },
+  methods: {},
+  data() {
+    return {
+      isAutenticate: socialnetwork.getUserLogged() !== undefined,
+    };
   },
 };
 </script>

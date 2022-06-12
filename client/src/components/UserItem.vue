@@ -1,20 +1,51 @@
 <template>
-  <figcaption class="mt-6 flex items-center justify-center space-x-4 text-left">
-    <img
-      :src="user.avatar"
-      alt=""
-      class="w-14 h-14 rounded-full"
-      loading="lazy"
-    />
-    <div>
-      <div class="text-slate-900 font-semibold dark:text-white">
-        {{ user.name }}
-      </div>
-      <div class="mt-0.5 text-sm leading-6">{{ user.mail }}</div>
+  <div class="flex items-center justify-end">
+    <div class="relative">
+      <img
+        class="rounded-full h-10 w-10"
+        src="https://i.pravatar.cc/100"
+        alt="avatar"
+      />
     </div>
-  </figcaption>
+    <div class="ml-3">
+      <div class="text-sm">
+        <p class="text-gray-600 dark:text-gray-400">{{ user.mail }}</p>
+        <div class="-mt-1">
+          <button
+            @click="logout"
+            class="text-sm font-medium leading-5 text-red-500 hover:text-red-700 transition duration-150 ease-in-out"
+          >
+            Sign out
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
-<script></script>
+<script>
+import socialnetwork from "@/services/socialnetwork";
+export default {
+  props: {
+    post: {
+      type: Object,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      // Get user from store
+      user: socialnetwork.getUser(socialnetwork.getUserLogged()).then((res) => {
+        this.user = res.data[0];
+      }),
+    };
+  },
+  methods: {
+    logout() {
+      socialnetwork.logout();
+    },
+  },
+};
+</script>
 
 <style></style>
