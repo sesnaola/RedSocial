@@ -71,21 +71,8 @@ const putUser = (request, response, next) => {
                     } else {
                         response.status(404).json({ success: false, message: 'User does not exist' });
                     }
-    query = "UPDATE Users SET "
-    if (!request.body.userId) return response.json({ success: false, message: 'No userId' });
-    if (!request.body.name && !request.body.surname && !request.body.password && !request.body.mail) return response.json({ success: false, message: 'No data to update' });
-    checkPutUsersData(request);
-
-    helper.checkUser(request.body.userId).then(result => {
-        if (result === true) {
-            query = query.split("'  ").join("', ");
-
-            conn.query(query + ` WHERE ID = ${request.body.userId}`,
-                (err, rows) => {
-                    err ? response.json({ success: false, err, }) : response.json({ success: true })
                 });
-        } else {
-            response.json({ success: false, message: 'User does not exist' });
+            }
         }
     });
 }
