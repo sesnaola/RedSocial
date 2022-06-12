@@ -1,34 +1,64 @@
 <template>
-  <div class="login">
-    <h1 class="title">Login in the page</h1>
-    <form action class="form" @submit.prevent="login">
-      <label class="form-label" for="#email">Email:</label>
-      <input
-        v-model="email"
-        class="form-input"
-        type="email"
-        id="email"
-        required
-        placeholder="Email"
-      />
-      <label class="form-label" for="#password">Password:</label>
-      <input
-        v-model="password"
-        class="form-input"
-        type="password"
-        id="password"
-        placeholder="Password"
-      />
-      <p v-if="error" class="error">
-        Has introducido mal el email o la contraseña.
-      </p>
-      <input class="form-submit" type="submit" value="Login" />
-    </form>
-    <p class="msg">
-      ¿No tienes cuenta?
-      <router-link to="/register">Regístrate</router-link>
-    </p>
-  </div>
+  <section class="h-screen">
+    <div class="container px-6 py-12 h-full">
+      <div
+        class="flex justify-center items-center flex-wrap h-full g-6 text-gray-800"
+      >
+        <div class="md:w-8/12 lg:w-6/12 mb-12 md:mb-0">
+          <img
+            src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg"
+            class="w-full"
+            alt="Phone image"
+          />
+        </div>
+        <div class="md:w-8/12 lg:w-5/12 lg:ml-20">
+          <!-- Title -->
+          <h2
+            class="text-3xl font-bold text-center text-gray-800 leading-tight mb-6"
+          >
+            Sign in
+          </h2>
+          <form action @submit.prevent="login">
+            <!-- Email input -->
+            <div class="mb-6">
+              <input
+                v-model="email"
+                type="text"
+                class="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                placeholder="Email address"
+              />
+            </div>
+
+            <!-- Password input -->
+            <div class="mb-6">
+              <input
+                v-model="password"
+                type="password"
+                class="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                placeholder="Password"
+              />
+            </div>
+            <div class="flex justify-end items-center mb-6">
+              <router-link
+                to="/register"
+                class="text-blue-600 hover:text-blue-700 focus:text-blue-700 active:text-blue-800 duration-200 transition ease-in-out"
+                >Sign up</router-link
+              >
+            </div>
+            <!-- Submit button -->
+            <button
+              type="submit"
+              class="inline-block px-7 py-3 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out w-full"
+              data-mdb-ripple="true"
+              data-mdb-ripple-color="light"
+            >
+              Sign in
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -42,13 +72,12 @@ export default {
   methods: {
     async login() {
       try {
-        await socialnetwork.login(this.email, this.password);
-        // TODO save jwt in localStorage
-        const user = {
-          email: this.email,
-        };
-        socialnetwork.setUserLogged(user);
-        this.$router.push("/");
+        await socialnetwork
+          .login(this.email, btoa(this.password))
+          .then((res) =>
+            socialnetwork.setUserLogged(res.data.token, res.data.user.id)
+          );
+        window.location.reload();
       } catch (error) {
         console.log(error);
         this.error = true;
