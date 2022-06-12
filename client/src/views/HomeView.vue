@@ -17,9 +17,6 @@ import NavBar from "@/components/NavBar.vue";
 import PostsView from "./PostsView.vue";
 import socialnetwork from "@/services/socialnetwork";
 
-console.log("test", socialnetwork.getUserLogged());
-console.log(socialnetwork.getUserLogged() === undefined);
-
 export default {
   name: "HomeView",
   data: () => ({

@@ -25,6 +25,7 @@ export default {
   logout() {
     Cookies.remove("userToken");
     Cookies.remove("userLogged");
+    this.$router.push("/");
   },
   login(mail, password) {
     const user = {
