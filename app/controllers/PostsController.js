@@ -132,7 +132,7 @@ function mapPosts(rows) {
                 id: post.id,
                 name: post.name,
                 surname: post.surname,
-                email: post.mail,
+                mail: post.mail,
                 photo: post.photo
             }
         };
