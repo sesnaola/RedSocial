@@ -1,32 +1,55 @@
 <template>
-  <div
-    class="relative z-10 rounded-lg shadow-xl text-slate-900 mx-auto sm:w-[50.4375rem] dark:text-slate-300"
-  >
-    <div
-      class="mt-1 flex items-center space-x-2 bg-white rounded-lg overflow-hidden ring-1 ring-slate-900/5 dark:bg-slate-800 dark:highlight-white/5 dark:ring-0 text-center"
-    >
-      <div class="relative z-10 overflow-hidden flex-none w-24 h-24">
-        <img
-          class="absolute w-14 h-14 object-cover bg-slate-100 rounded-full"
-          src="https://i.pravatar.cc/100"
-          alt="avatar"
-        />
-      </div>
-      <div class="post-header-name">
-        <h3>Usuario idd : {{ user }}</h3>
-        <!-- <h3>{{ post.user.name }}</h3>
-        <p>{{ post.user.email }}</p> -->
+  <div class="flex border-b border-solid border-grey-light">
+    <div class="w-1/8 text-right pl-3 pt-3">
+      <div>
+        <a href="#"
+          ><img
+            src="https://i.pravatar.cc/100"
+            alt="avatar"
+            class="rounded-full h-12 w-12 mr-2"
+        /></a>
       </div>
     </div>
-    <div class="pt-6">
-      <p>{{ post.text }}</p>
+    <div class="w-7/8 p-3 pl-0">
+      <div class="flex justify-between">
+        <div>
+          <span class="font-bold"
+            ><a href="#" class="text-black">
+              {{ user.name }} {{ user.surname }}</a
+            ></span
+          >
+          <span class="text-grey-dark">&middot;</span>
+          <span class="text-grey-dark">15 Dec 2017</span>
+        </div>
+      </div>
+      <div>
+        <div class="mb-4">
+          <p class="mb-6">{{ post.text }}</p>
+          <!-- Show post data if not is text -->
+          <p v-if="isPostText">
+            <a href="#"
+              ><img
+                src="localhost:3080/{{ post.path }}"
+                alt="tweet image"
+                class="border border-solid border-grey-light rounded-sm"
+            /></a>
+          </p>
+          <p v-if="isPostVideo">
+            <a href="#"
+              ><img
+                src="localhost:3080/{{ post.path }}"
+                alt="tweet image"
+                class="border border-solid border-grey-light rounded-sm"
+            /></a>
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import socialnetwork from "@/services/socialnetwork";
-
 export default {
   props: {
     post: {
@@ -36,7 +59,12 @@ export default {
   },
   data() {
     return {
-      user: socialnetwork.getUser(this.post.userId),
+      // Get user from store
+      user: socialnetwork.getUser(this.post.userId).then((res) => {
+        this.user = res.data[0];
+      }),
+      isPostText: this.post.type === "text",
+      isPostVideo: this.post.type === "video",
     };
   },
 };

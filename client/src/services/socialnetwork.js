@@ -16,14 +16,16 @@ export default {
     Cookies.set("userLogged", userId);
   },
   getUserLogged() {
+    // Get user logged from store
     return Cookies.get("userLogged");
   },
   getUserToken() {
     return Cookies.get("userToken");
   },
-  deleteUserLogged() {
+  logout() {
     Cookies.remove("userToken");
     Cookies.remove("userLogged");
+    this.$router.push("/");
   },
   login(mail, password) {
     const user = {
