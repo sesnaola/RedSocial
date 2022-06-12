@@ -39,4 +39,7 @@ export default {
     };
     return SocialNetwork.post("users", users);
   },
+  getPosts() {
+    return SocialNetwork.get("/posts");
+  },
 };
