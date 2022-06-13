@@ -41,6 +41,9 @@ export default {
     // return SocialNetwork.get(`/users?userId=${userId}`);
     return SocialNetwork.get(`/users/${userId}`);
   },
+  deleteUsers() {
+    return SocialNetwork.post("/users");
+  },
   register(name, surname, mail, password) {
     const users = {
       name,
