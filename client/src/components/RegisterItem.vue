@@ -6,7 +6,7 @@
       >
         <div class="md:w-8/12 lg:w-6/12 mb-12 md:mb-0">
           <img
-            src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg"
+            src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw1.svg"
             class="w-full"
             alt="Phone image"
           />
@@ -16,9 +16,29 @@
           <h2
             class="text-3xl font-bold text-center text-gray-800 leading-tight mb-6"
           >
-            Sign in
+            Sign up
           </h2>
-          <form action @submit.prevent="login">
+          <form action @submit.prevent="register">
+            <!-- Name input -->
+            <div class="mb-6">
+              <input
+                v-model="name"
+                type="text"
+                class="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                placeholder="Name"
+                required
+              />
+            </div>
+            <!-- Surname input -->
+            <div class="mb-6">
+              <input
+                v-model="surname"
+                type="text"
+                class="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                placeholder="Surname"
+                required
+              />
+            </div>
             <!-- Email input -->
             <div class="mb-6">
               <input
@@ -26,6 +46,7 @@
                 type="text"
                 class="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                 placeholder="Email address"
+                required
               />
             </div>
 
@@ -38,12 +59,19 @@
                 placeholder="Password"
               />
             </div>
-            <div class="flex justify-end items-center mb-6">
-              <router-link
-                to="/register"
-                class="text-blue-600 hover:text-blue-700 focus:text-blue-700 active:text-blue-800 duration-200 transition ease-in-out"
-                >Sign up</router-link
-              >
+            <!-- PasswordRepeat input -->
+            <div class="mb-6">
+              <input
+                v-model="passwordRepeat"
+                type="password"
+                class="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                placeholder="Password repeat"
+              />
+            </div>
+            <div class="flex items-center mb-6">
+              <p v-if="error" class="error">
+                {{ error }}
+              </p>
             </div>
             <!-- Submit button -->
             <button
@@ -63,23 +91,37 @@
 
 <script>
 import socialnetwork from "@/services/socialnetwork";
+
 export default {
   data: () => ({
+    name: "",
+    surname: "",
     email: "",
     password: "",
-    error: false,
+    passwordRepeat: "",
+    error: "",
   }),
   methods: {
-    async login() {
+    // TODO - Implementar error en el formulario de registro (en el mismo componente)
+    async register() {
+      const mail = this.email;
+      const pass = this.password;
       try {
+        if (this.password != this.passwordRepeat) {
+          throw new Error("Passwords don't match");
+        }
         await socialnetwork
-          .login(this.email, btoa(this.password))
-          .then((res) =>
-            socialnetwork.setUserLogged(res.data.token, res.data.user.id)
-          );
-        window.location.reload();
+          .register(this.name, this.surname, this.email, btoa(this.password))
+          .then(function () {
+            socialnetwork
+              .login(mail, btoa(pass))
+              .then((res) =>
+                socialnetwork.setUserLogged(res.data.token, res.data.user.id)
+              );
+          });
+        this.$router.push("/posts");
       } catch (error) {
-        this.error = true;
+        this.error = error.message;
       }
     },
   },
@@ -87,7 +129,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.login {
+.register {
   padding: 2rem;
 }
 .title {
@@ -140,9 +182,5 @@ export default {
 .error {
   margin: 1rem 0 0;
   color: #ff4a96;
-}
-.msg {
-  margin-top: 3rem;
-  text-align: center;
 }
 </style>

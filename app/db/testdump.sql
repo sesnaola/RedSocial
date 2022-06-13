@@ -28,12 +28,34 @@ INSERT INTO
     )
 VALUES
     (
+        'admin',
+        'rsocial',
+        -- password: pear
+        "YWRtaW4=",
+        'admin@mail.com',
+        '',
+        1,
+        1655074399
+    );
+
+INSERT INTO
+    Users (
+        name,
+        surname,
+        password,
+        mail,
+        photo,
+        admin,
+        creationDate
+    )
+VALUES
+    (
         'Alberto',
         'Jimenez',
         -- password: pear
         "cGVhcg==",
         'alberto@mail.com',
-        '/tmp/alberto.png',
+        '',
         0,
         1653926628
     );
@@ -55,7 +77,7 @@ VALUES
         -- password: coconut
         "Y29jb251dA==",
         'petronio@mail.com',
-        '/tmp/petronio.png',
+        '',
         0,
         1653931529
     );
@@ -99,3 +121,5 @@ VALUES
 ALTER USER 'admin' IDENTIFIED WITH mysql_native_password BY 'Welcome1';
 
 flush privileges;
+
+SET SESSION sql_mode = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';

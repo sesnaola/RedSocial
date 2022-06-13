@@ -1,35 +1,33 @@
 const { query } = require('express');
 const conn = require('./../db/dbConnection');
-let posts = require('./../models/PostsModel');
+let posts = require('./../models/Posts');
 let helper = require('./../helpers/checkIfUserExists');
+const { Users } = require('../models/Users');
 
 
 const getPosts = (request, response, next) => {
     let postType = request.query.postType;
     let userId = request.query.userId;
     let amount = request.query.amount;
-
     let query = generateQuery(postType, userId, amount);
-
     conn.query(query, (err, rows) => {
         mapPosts(rows);
-        err ? response.json({ success: false, err, }) : response.json({ posts })
+        err ? response.status(500).json({ success: false, err, }) : response.json({ posts }.posts)
     });
-
 }
 
 const postPosts = (request, response, next) => {
 
-    if (!request.body.userId) { return response.json({ success: false, message: 'No userId provided' }); }
+    if (!request.body.userId) { return response.status(400).json({ success: false, message: 'No userId provided' }); }
     checkNewPosts(request.body);
     fileToUpload = request.files;
     if (fileToUpload) { fileToUpload = request.files.file; checkFileType(); }
 
     helper.checkUser(request.body.userId).then(result => {
-        if (result === true) {
+        if (result) {
             selectQueryOption(response);
         } else {
-            response.json({ success: false, message: 'User does not exist' });
+            response.status(400).json({ success: false, message: 'User does not exist' });
         }
     });
 }
@@ -68,7 +66,7 @@ function postWithFile(response) {
                                 '${posts.creationDate}',
                                 '${posts.text}')`,
                 (err, rows) => {
-                    err ? response.json({ success: false, err, }) : response.json({
+                    err ? response.status(500).json({ success: false, err, }) : response.json({
                         success: true,
                         name: fileToUpload.name,
                         route: posts.path,
@@ -84,7 +82,7 @@ function postOnlyText(response) {
     posts.postType = "text";
     posts.path = undefined;
     if (posts.text === undefined) {
-        response.json({ success: false, message: 'No text provided' });
+        response.status(400).json({ success: false, message: 'No text provided' });
     } else {
         conn.query(`INSERT INTO Posts (userId, postType, path, creationDate, text)
             VALUES ('${posts.userId}',
@@ -93,7 +91,7 @@ function postOnlyText(response) {
                     '${posts.creationDate}',
                     '${posts.text}')`,
             (err, rows) => {
-                err ? response.json({ success: false, err, }) : response.json({
+                err ? response.status(500).json({ success: false, err, }) : response.json({
                     success: true,
                     text: posts.text
                 });
@@ -115,9 +113,8 @@ function arrangeParameters(postType, userId, amount) {
 }
 
 function arrangeQuery(queryPostType, queryUserId, queryAmount, postType, userId, amount) {
-    let query = 'SELECT * FROM Posts WHERE ' + queryPostType + ' AND ' + queryUserId + queryAmount;
-
-    if (postType == undefined && userId == undefined && amount == undefined) { query = 'SELECT * FROM Posts'; }
+    let query = 'SELECT P.id AS postId, P.postType, P.path, P.creationDate, P.text,  Users.id, Users.name, Users.surname, Users.mail, Users.photo FROM Posts P Inner Join Users ON Users.id = P.userId WHERE ' + queryPostType + ' AND ' + queryUserId + queryAmount;
+    if (postType == undefined && userId == undefined && amount == undefined) { query = 'SELECT P.id AS postId, P.postType, P.path, P.creationDate, P.text,  Users.id, Users.name, Users.surname, Users.mail, Users.photo FROM Posts P Inner Join Users ON Users.id = P.userId'; }
     if (postType == undefined && userId == undefined) { query = query.replace('WHERE', ''); }
     if (postType == undefined || userId == undefined) { query = query.replace('AND', ''); }
     return query;
@@ -126,12 +123,18 @@ function arrangeQuery(queryPostType, queryUserId, queryAmount, postType, userId,
 function mapPosts(rows) {
     posts = rows.map(post => {
         return {
-            id: post.id,
-            userId: post.userId,
+            id: post.postId,
             postType: post.postType,
             path: post.path,
             creationDate: post.creationDate,
-            text: post.text
+            text: post.text,
+            user: {
+                id: post.id,
+                name: post.name,
+                surname: post.surname,
+                mail: post.mail,
+                photo: post.photo
+            }
         };
     });
 }
