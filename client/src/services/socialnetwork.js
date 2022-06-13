@@ -50,6 +50,15 @@ export default {
     };
     return SocialNetwork.post("users", users);
   },
+  publicar(userId, text, fd) {
+    fd.set("userId", userId);
+    fd.set("text", text);
+    return SocialNetwork.post("/posts", fd, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  },
   getPosts() {
     return SocialNetwork.get("/posts");
   },
