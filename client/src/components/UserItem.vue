@@ -3,14 +3,14 @@
     <div class="relative">
       <img
         class="rounded-full h-10 w-10"
-        src="https://i.pravatar.cc/100"
+        v-bind:src="'http://localhost:3080/' + user.photo"
         alt="avatar"
       />
     </div>
     <div class="ml-3">
       <div class="text-sm">
         <p class="text-gray-600 dark:text-gray-400">{{ user.mail }}</p>
-        <div class="-mt-1">
+        <div class="-mt-1" style="margin-top: 1.5px">
           <button
             @click="logout"
             class="text-sm font-medium leading-5 text-red-500 hover:text-red-700 transition duration-150 ease-in-out"
@@ -43,6 +43,7 @@ export default {
   methods: {
     logout() {
       socialnetwork.logout();
+      window.location.reload();
     },
   },
 };

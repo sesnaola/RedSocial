@@ -3,7 +3,12 @@
   <div class="posts">
     <!-- Title post with tailwind -->
     <div class="posts-header">
-      <h2 class="text-5xl font-bold leading-normal mt-0">Posts</h2>
+      <h2
+        class="text-5xl font-bold leading-normal mt-0"
+        style="text-align: center"
+      >
+        Posts
+      </h2>
     </div>
     <div class="w-full mx-auto lg:w-1/2 bg-white mb-4">
       <div
@@ -32,7 +37,7 @@ export default {
   methods: {
     async getPosts() {
       await socialnetwork.getPosts().then((res) => {
-        this.posts = res.data.posts;
+        this.posts = res.data;
       });
     },
   },
