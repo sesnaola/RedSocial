@@ -6,6 +6,7 @@ const postsController = require('./../controllers/PostsController');
 const jwt = require('jsonwebtoken');
 
 router.post('/login', authController.login);
+router.post('/users', usersController.postUser);
 
 router.use((request, response, next) => {
     if (!request.headers.authorization) return response.status(401).json({ success: false, message: 'No token provided' });
@@ -17,7 +18,6 @@ router.use((request, response, next) => {
 
 router.get('/users', usersController.getUsers);
 router.get('/users/:id?', usersController.getUsers);
-router.post('/users', usersController.postUser);
 router.put('/users', usersController.putUser);
 router.delete('/users', usersController.deleteUsers);
 router.post('/profile-image', usersController.postProfileImage);
