@@ -13,7 +13,7 @@ Iniciar contenedor de Docker
   docker-compose up
 ```
 
-## Documentación de la API
+## API
 
 Es necesario estar identificado para  todas las peticiones, excepto para login y register.
 
@@ -21,6 +21,20 @@ Es necesario estar identificado para  todas las peticiones, excepto para login y
 ```http
   localhost:3080/api/v1
 ```
+
+### Swagger
+```http
+  localhost:3080/swagger
+```
+
+## Front
+
+
+### URL
+```http
+  localhost:8080
+```
+
 <!-- ### Get Users
 
 Devuelve todos los usuarios
