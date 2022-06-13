@@ -7,6 +7,7 @@ const SocialNetwork = axios.create({
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
+    Authorization: `${Cookies.get("userToken")}`,
   },
 });
 
@@ -25,7 +26,6 @@ export default {
   logout() {
     Cookies.remove("userToken");
     Cookies.remove("userLogged");
-    this.$router.push("/");
   },
   login(mail, password) {
     const user = {
@@ -38,7 +38,8 @@ export default {
     return SocialNetwork.get("/users");
   },
   getUser(userId) {
-    return SocialNetwork.get(`/users?userId=${userId}`);
+    // return SocialNetwork.get(`/users?userId=${userId}`);
+    return SocialNetwork.get(`/users/${userId}`);
   },
   register(name, surname, mail, password) {
     const users = {

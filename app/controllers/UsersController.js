@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 async function getUsers(request, response, next) {
     query = "SELECT * FROM Users";
-    if (request.query.userId) query = query + ` WHERE id=${request.query.userId}`;
+    if (request.params.id) query = query + ` WHERE id=${request.params.id}`;
 
     conn.query(query, (err, rows) => {
         if (!rows) return response.status(404).json({ success: false, message: 'No users found' });
