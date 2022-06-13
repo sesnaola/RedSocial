@@ -7,17 +7,24 @@ const SocialNetwork = axios.create({
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
+    Authorization: `${Cookies.get("userToken")}`,
   },
 });
 
 export default {
   setUserLogged(token, userId) {
-    Cookies.set("userLogged", { token, userId });
+    Cookies.set("userToken", token);
+    Cookies.set("userLogged", userId);
   },
   getUserLogged() {
+    // Get user logged from store
     return Cookies.get("userLogged");
   },
-  deleteUserLogged() {
+  getUserToken() {
+    return Cookies.get("userToken");
+  },
+  logout() {
+    Cookies.remove("userToken");
     Cookies.remove("userLogged");
   },
   login(mail, password) {
@@ -29,6 +36,10 @@ export default {
   },
   getUsers() {
     return SocialNetwork.get("/users");
+  },
+  getUser(userId) {
+    // return SocialNetwork.get(`/users?userId=${userId}`);
+    return SocialNetwork.get(`/users/${userId}`);
   },
   register(name, surname, mail, password) {
     const users = {
@@ -47,5 +58,8 @@ export default {
         "Content-Type": "multipart/form-data",
       },
     });
+  },
+  getPosts() {
+    return SocialNetwork.get("/posts");
   },
 };

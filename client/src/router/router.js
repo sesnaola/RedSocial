@@ -3,19 +3,13 @@ import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import RegisterView from "../views/RegisterView.vue";
 import PostAddView from "../views/PostAddView.vue";
+import PostsView from "../views/PostsView.vue";
 
 const routes = [
   {
     path: "/",
     name: "home",
     component: HomeView,
-  },
-  {
-    path: "/about",
-    name: "about",
-    component: function () {
-      return import(/* webpackChunkName: "about" */ "../views/AboutView.vue");
-    },
   },
   {
     path: "/login",
@@ -31,6 +25,11 @@ const routes = [
     path: "/posts/add",
     name: "postadd",
     component: PostAddView,
+  },
+  {
+    path: "/posts",
+    name: "posts",
+    component: PostsView,
   },
 ];
 
