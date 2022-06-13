@@ -8,6 +8,13 @@
               v-bind:src="'http://localhost:3080/' + post.user.photo"
               alt="avatar"
               class="rounded-full h-12 w-12 mr-2"
+              style="
+                display: block;
+                max-width: 50px;
+                max-height: 50px;
+                width: auto;
+                height: auto;
+              "
             />
           </p>
           <p v-if="!isProfilePhoto">
@@ -43,7 +50,7 @@
         <div class="mb-4">
           <p class="mb-6">{{ post.text }}</p>
           <!-- Show post data if is not text -->
-          <p v-if="isPostImage" style="text-align: center;">
+          <p v-if="isPostImage" style="text-align: center">
             <a href="#">
               <img
                 v-bind:src="'http://localhost:3080/' + post.path"

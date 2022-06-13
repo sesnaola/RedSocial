@@ -1,11 +1,27 @@
 <template>
   <div class="flex items-center justify-end">
     <div class="relative">
-      <img
-        class="rounded-full h-10 w-10"
-        v-bind:src="'http://localhost:3080/' + user.photo"
-        alt="avatar"
-      />
+      <p v-if="user.photo">
+        <img
+          v-bind:src="'http://localhost:3080/' + user.photo"
+          alt="avatar"
+          class="rounded-full h-12 w-12 mr-2"
+        />
+      </p>
+      <p v-if="!user.photo">
+        <img
+          src="https://i.pravatar.cc/100"
+          alt="avatar"
+          class="rounded-full h-12 w-12 mr-2"
+          style="
+            display: block;
+            max-width: 50px;
+            max-height: 50px;
+            width: auto;
+            height: auto;
+          "
+        />
+      </p>
     </div>
     <div class="ml-3">
       <div class="text-sm">
@@ -37,6 +53,7 @@ export default {
       // Get user from store
       user: socialnetwork.getUser(socialnetwork.getUserLogged()).then((res) => {
         this.user = res.data[0];
+        console.log(this.user);
       }),
     };
   },
